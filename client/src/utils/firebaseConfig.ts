@@ -7,12 +7,12 @@ import { getStorage } from "firebase/storage";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyA0x3j7aGufMVvwz-6xYiRk9DPS5LzlDdI",
-  authDomain: "maadhyam-blogging-app.firebaseapp.com",
-  projectId: "maadhyam-blogging-app",
-  storageBucket: "maadhyam-blogging-app.appspot.com",
-  messagingSenderId: "636993503487",
-  appId: "1:636993503487:web:f996eb3fa32e674ac24cca",
+  apiKey: "your_firebase_app_api_key",
+  authDomain: "your_firebase_app_auth_domain",
+  projectId: "your_firebase_project_id",
+  storageBucket: "your_firebase_app_storage_bucket",
+  messagingSenderId: "your_firebase_app_messaging_sender_id",
+  appId: "your_fireabase_app_id",
 };
 
 // Initialize Firebase
