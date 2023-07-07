@@ -1,0 +1,28 @@
+{
+  // WEB snippets
+  "React component": {
+    "scope": "javascriptreact,typescriptreact",
+    "prefix": "rc",
+    "body": [
+      "import { twMerge } from \"tailwind-merge\";",
+      "",
+      "const ${1:ComponentName} = ({ $2className = \"\", ...props }) => {",
+      "  return <div className={twMerge(\"$3\", className)} {...props}>$4</div>;",
+      "};",
+      "",
+      "export default ${1:ComponentName};",
+      ""
+    ]
+  },
+
+  "React component clean": {
+    // no import or export
+    "scope": "javascriptreact,typescriptreact",
+    "prefix": "rcc",
+    "body": [
+      "const ${1:ComponentName} = ({ $2className = \"\", ...props }) => {",
+      "  return <div className={twMerge(\"$3\", className)} {...props}>$4</div>;",
+      "};"
+    ]
+  }
+}

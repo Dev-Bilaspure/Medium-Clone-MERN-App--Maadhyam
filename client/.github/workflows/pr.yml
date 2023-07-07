@@ -1,0 +1,54 @@
+name: CI
+
+on:
+  pull_request:
+
+jobs:
+  cancel-prev-runs:
+    name: Cancel Previous Runs
+    runs-on: ubuntu-latest
+    steps:
+      - uses: styfle/cancel-workflow-action@0.9.1
+        with:
+          access_token: ${{ github.token }}
+
+  integrate:
+    name: CI Pipeline
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16.x
+
+      # Install project dependencies, test
+      - name: Setup yarn
+        uses: borales/actions-yarn@v4 # I'm not sure if this is any better than using `yarn install` directly. Will keep it like this for now. (I think there's some cleanup considerations that this might be convering, but I've not looked too deeply into this).
+        with:
+          cmd: install
+      - name: Run linter
+        uses: borales/actions-yarn@v4
+        with:
+          cmd: lint
+      - name: Run TS checks
+        uses: borales/actions-yarn@v4
+        with:
+          cmd: tsc
+
+      # - name: Install Firebase CLI
+      #   run: npm install -g firebase-tools
+
+      # - name: Install Dependencies in Playwright Folder
+      #   run: cd playwright && yarn
+      # - name: Install Playwright Browsers
+      #   run: cd playwright && npx playwright install --with-deps
+      # - name: Run Playwright tests
+      #   run: yarn playwright:ci
+      # - uses: actions/upload-artifact@v3
+      #   if: always()
+      #   with:
+      #     name: playwright-report
+      #     path: playwright/playwright-report/
+      #     retention-days: 30

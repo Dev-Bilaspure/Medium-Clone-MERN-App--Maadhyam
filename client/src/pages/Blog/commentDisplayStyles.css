@@ -1,0 +1,20 @@
+.quill.ql-style-comment-display {
+  .ql-toolbar {
+    display: none;
+  }
+  .ql-container {
+    border: none;
+  }
+  .ql-editor {
+    padding: 0;
+    width: 100%;
+    resize: none;
+    border-radius: 0.375rem;
+    background-color: #ffffff;
+    /* /* padding-top: 0.75rem; */
+    padding-bottom: 0.35rem;
+    font-size: 14px;
+    outline: none;
+    line-height: 1.7;
+  }
+}

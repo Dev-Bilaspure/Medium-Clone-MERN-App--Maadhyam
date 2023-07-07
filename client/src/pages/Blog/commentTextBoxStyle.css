@@ -1,0 +1,31 @@
+.quill.ql-style-comment-section {
+  .ql-toolbar {
+    display: none;
+  }
+  .ql-container {
+    border: none;
+  }
+  .ql-editor {
+    padding: 0;
+    width: 100%;
+    resize: none;
+    border-radius: 0.375rem;
+    background-color: #ffffff;
+    padding-top: 0.75rem;
+    padding-bottom: 0.75rem;
+    font-size: 14px;
+    outline: none;
+    min-height: 60px;
+    line-height: 1.7;
+  }
+}
+
+/* Styles for screens with a maximum width of 600px */
+/* @media (max-width: 1024px) {
+  .quill.ql-style {
+    .ql-editor {
+      font-size: 15px;
+      line-height: 1.7;
+    }
+  }
+} */
