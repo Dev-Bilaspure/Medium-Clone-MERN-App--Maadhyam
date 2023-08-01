@@ -59,6 +59,9 @@ export const createComment = async (req: Request, res: Response) => {
       },
     });
 
+    post.comments.push(comment._id);
+    await post.save();
+
     await comment.save();
 
     res.status(201).json({

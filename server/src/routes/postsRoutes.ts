@@ -9,6 +9,7 @@ import {
   getUsersLikedPosts,
   likeAPost,
   publishPost,
+  // tempAPI,
   unlikeAPost,
   unpublishPost,
   updatePost,
@@ -29,6 +30,8 @@ router.put("/unlike/:postId", authenticateToken, unlikeAPost);
 router.get("/liked-posts/:userId", authenticateToken, getUsersLikedPosts);
 router.get('/tag/:tag', getPostsByTag);
 router.put("/:postId", authenticateToken, updatePost);
+
+// router.post("/tempapi", tempAPI);
 
 
 export default router;

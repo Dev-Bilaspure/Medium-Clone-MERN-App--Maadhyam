@@ -27,7 +27,7 @@ const Navbar = () => {
         >
           <div className={`flex w-full justify-between px-10 sm:px-0`}>
             <BigLogo className={""} />
-            <div className="flex flex-row items-center justify-center space-x-10 text-black sm:space-x-5 text-[15px]">
+            <div className="flex flex-row items-center justify-center space-x-10 text-[15px] text-black sm:space-x-5">
               <a
                 href="https://linkedin.com/in/dev-bilaspure"
                 target="_blank"
@@ -35,8 +35,19 @@ const Navbar = () => {
               >
                 <p className="">Contact us</p>
               </a>
+
+              <Link
+                to="https://github.com/Dev-Bilaspure/Medium-Clone-MERN-App--Maadhyam"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <div className="flex space-x-1">
+                  <i className="fa-brands fa-github flex items-center justify-center sm:text-[12px]"></i>
+                  <p className="sm:text-[13px]">Github</p>
+                </div>
+              </Link>
               {location.pathname !== "/write" && (
-                <Link to="/write">
+                <Link to="/write" className="sm:hidden">
                   <div className="flex space-x-1">
                     <i className="fa-regular fa-pen-to-square flex items-center justify-center sm:text-[13px]"></i>
                     <p className="sm:text-[13px]">Write</p>
@@ -56,9 +67,7 @@ const Navbar = () => {
                   Get Started
                 </button>
               )}
-              {authenticatedUser && (
-                <AccountMenu />
-              )}
+              {authenticatedUser && <AccountMenu />}
             </div>
           </div>
         </Toolbar>

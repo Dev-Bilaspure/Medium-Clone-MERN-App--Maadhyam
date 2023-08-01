@@ -153,6 +153,7 @@ const UserFF = ({ ffUser, setffUsers }) => {
       if (isFollowing) {
         const response = await unfollowAUser(ffUser._id);
         if (response.success) {
+          setIsFollowing(false);
           setffUsers((prevffUsers) => {
             return prevffUsers.map((prevffUser) => {
               if (prevffUser._id === ffUser._id) {
@@ -166,10 +167,11 @@ const UserFF = ({ ffUser, setffUsers }) => {
               return prevffUser;
             });
           });
-          setIsFollowing(false);
+          debug_mode && console.log("unfollowed successfully");
         }
         debug_mode && console.log(response);
       } else {
+        setIsFollowing(true);
         const response = await followAUser(ffUser._id);
         if (response.success) {
           setffUsers((prevffUsers) => {
@@ -183,7 +185,7 @@ const UserFF = ({ ffUser, setffUsers }) => {
               return prevffUser;
             });
           });
-          setIsFollowing(true);
+          debug_mode && console.log("followed successfully");
         }
         debug_mode && console.log(response);
       }
@@ -194,7 +196,7 @@ const UserFF = ({ ffUser, setffUsers }) => {
   return (
     <div className="flex justify-between">
       <div className="flex space-x-5 sm:space-x-4 ">
-        <div className="h-[47px] w-[47px] sm:w-[40px] sm:h-[40px]">
+        <div className="h-[47px] w-[47px] sm:h-[40px] sm:w-[40px]">
           <Link to={`/${ffUser ? ffUser.username : ""}`}>
             <img
               src={
@@ -206,7 +208,7 @@ const UserFF = ({ ffUser, setffUsers }) => {
             />
           </Link>
         </div>
-        <div className="flex-1 mb-1">
+        <div className="mb-1 flex-1">
           <Link to={`/${ffUser.username}`}>
             <p className=" text-[18px] font-medium sm:text-[16px]">
               {!authenticatedUser || authenticatedUser._id !== ffUser._id

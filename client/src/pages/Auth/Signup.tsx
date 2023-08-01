@@ -17,6 +17,7 @@ import { useStore } from "@/store/useStore";
 import { debug_mode } from "@/debug-controller";
 import { AxiosError } from "axios";
 import SEO from "@/components/primary/SEO";
+import { INTERNAL_SERVER_ERROR } from "@/utils/errorTypes";
 
 const Signup = ({ setIsSubmittingForm, setSubmittionError }) => {
   const navigate = useNavigate();
@@ -29,10 +30,13 @@ const Signup = ({ setIsSubmittingForm, setSubmittionError }) => {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
+    reset,
   } = useForm({ resolver: zodResolver(signupSchema) });
 
   const {
-    actions: { auth: {signupUser} },
+    actions: {
+      auth: { signupUser },
+    },
   } = useStore();
 
   const onSubmit = async (data) => {
@@ -53,9 +57,12 @@ const Signup = ({ setIsSubmittingForm, setSubmittionError }) => {
       if (debug_mode) console.log(response);
 
       if (response.success) {
-        navigate("/");
+        // navigate("/");
       } else {
-        setSubmittionError(response.message);
+        if (response.error.response.data.errorType !== INTERNAL_SERVER_ERROR) {
+          reset();
+        }
+        setSubmittionError(response.error.response.data.message);
       }
       setIsSubmittingForm(false);
     } catch (error: any) {

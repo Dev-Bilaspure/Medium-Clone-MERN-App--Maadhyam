@@ -3,6 +3,7 @@ import { useStore } from "@/store/useStore";
 import { usernameSchema } from "@/utils/schemas";
 import { Button, CircularProgress, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { twMerge } from "tailwind-merge";
 
 const UsernameEdit = (props) => {
@@ -10,6 +11,7 @@ const UsernameEdit = (props) => {
     data: { authenticatedUser },
     actions: {
       user: { updateUser },
+      auth: { checkUsernameAvailability },
     },
   } = useStore();
   const [editUsername, setEditUsername] = useState<Boolean>(false);
@@ -17,15 +19,34 @@ const UsernameEdit = (props) => {
   const [fieldErrors, setFieldErrors] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [submitError, setSubmitError] = useState<boolean>(false);
+  const [isCheckingAvailability, setIsCheckingAvailability] =
+    useState<boolean>(false);
+  const [isUsernameAvailable, setIsUsernameAvailable] = useState<boolean>(true);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
+    if (!authenticatedUser) {
+      navigate("/");
+      return;
+    }
     setUsername(authenticatedUser?.username);
   }, [authenticatedUser]);
 
   const handleSubmit = async () => {
-    if (isSubmitting || !editUsername) return;
+    if (
+      isSubmitting ||
+      !editUsername ||
+      fieldErrors ||
+      isCheckingAvailability ||
+      !isUsernameAvailable ||
+      username === authenticatedUser.username
+    )
+      return;
     setIsSubmitting(true);
     setSubmitError(false);
+
+    if (!isUsernameAvailable) return;
 
     try {
       usernameSchema.parse(username);
@@ -45,6 +66,34 @@ const UsernameEdit = (props) => {
 
     setIsSubmitting(false);
     setEditUsername(false);
+  };
+
+  const handleOnChange = async (e) => {
+    if (isSubmitting || !editUsername) return;
+    setFieldErrors(null);
+    try {
+      usernameSchema.parse(e.target.value);
+    } catch (error: any) {
+      setFieldErrors(error);
+      debug_mode && console.log(error);
+      setIsSubmitting(false);
+    }
+    setUsername(e.target.value);
+
+    if (!fieldErrors) {
+      if (e.target.value.length < 3) return;
+      // console.log({ username: e.target.value })
+      setIsCheckingAvailability(true);
+      const response = await checkUsernameAvailability(e.target.value);
+      if (response.success) {
+        if (e.target.value !== authenticatedUser.username)
+          setIsUsernameAvailable(response.isAvailable || false);
+      } else {
+        setSubmitError(true);
+      }
+      setIsCheckingAvailability(false);
+      // console.log(response);
+    }
   };
 
   return (
@@ -72,20 +121,30 @@ const UsernameEdit = (props) => {
             >
               Username:
             </Typography>
-            <input
-              type="text"
-              disabled={!editUsername || isSubmitting}
-              className={`overflow-wrap-break-word w-full border-b border-[#E6E6E6] bg-white pb-1  outline-none focus:outline-none ${
-                editUsername && "border-black"
-              } text-[14px]`}
-              placeholder="Username"
-              value={username}
-              onChange={(e) => {
-                if (isSubmitting || !editUsername) return;
-                setFieldErrors(null);
-                setUsername(e.target.value);
-              }}
-            />
+            <div className="flex w-full">
+              <div className="w-full">
+                <input
+                  type="text"
+                  disabled={!editUsername || isSubmitting}
+                  className={`overflow-wrap-break-word w-full border-b border-[#E6E6E6] bg-white pb-1  outline-none focus:outline-none ${
+                    editUsername && "border-black"
+                  } text-[14px]`}
+                  placeholder="Username"
+                  value={username}
+                  onChange={handleOnChange}
+                  spellCheck={false}
+                  onPaste={(e) => e.preventDefault()}
+                />
+                {!isUsernameAvailable && (
+                  <p className="mt-[3px] text-[10px] text-[#f44336]">
+                    Username not available
+                  </p>
+                )}
+              </div>
+              {isCheckingAvailability && (
+                <CircularProgress color="inherit" size={18} />
+              )}
+            </div>
           </div>
           <div className="mt-5 flex space-x-5">
             <Typography
@@ -131,7 +190,10 @@ const UsernameEdit = (props) => {
                 }}
                 disabled={
                   isSubmitting ||
-                  (authenticatedUser && username === authenticatedUser.username)
+                  (authenticatedUser &&
+                    username === authenticatedUser.username) ||
+                  !isUsernameAvailable ||
+                  fieldErrors
                 }
                 onClick={handleSubmit}
               >
@@ -149,6 +211,9 @@ const UsernameEdit = (props) => {
                 onClick={() => {
                   if (isSubmitting) return;
                   setUsername(authenticatedUser.username);
+                  setIsUsernameAvailable(true);
+                  setIsCheckingAvailability(false);
+                  setSubmitError(false);
                   setEditUsername(false);
                 }}
               >

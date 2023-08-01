@@ -21,7 +21,7 @@ const TextEditor = ({
       [{ align: "" }, { align: "center" }, { align: "right" }],
       ["link"],
       [{ color: [] }, { background: [] }],
-      ["image"],
+      ["image", "video"],
       ["clean"],
     ],
   };
@@ -40,6 +40,8 @@ const TextEditor = ({
     "color",
     "background",
     "image",
+    "video",
+    "clean",
   ];
 
   const handleChange = (html) => {

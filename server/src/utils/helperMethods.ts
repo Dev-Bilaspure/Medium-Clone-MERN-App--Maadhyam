@@ -1,6 +1,7 @@
 import bcrypt from "bcryptjs";
 import { configDotenv } from "dotenv";
 import jwt from "jsonwebtoken";
+import crypto from "crypto";
 
 configDotenv();
 
@@ -29,7 +30,22 @@ export async function verifyPassword(
 
 export const createToken = (user: any) => {
   const token = jwt.sign({ user }, process.env.JWT_SECRET as string, {
-    expiresIn: "7d",
+    expiresIn: "2d",
   });
   return token;
 };
+
+export function generateRandomString(length: any) {
+  const characters =
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  const characterCount = characters.length;
+  const randomBytes = crypto.randomBytes(length);
+  let randomString = "";
+
+  for (let i = 0; i < length; i++) {
+    const randomIndex = randomBytes[i] % characterCount;
+    randomString += characters.charAt(randomIndex);
+  }
+
+  return randomString;
+}

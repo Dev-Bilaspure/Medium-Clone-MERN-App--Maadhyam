@@ -153,8 +153,8 @@ const BlogPost = ({ post, setPosts, tagValue, ...props }) => {
     if (authenticatedUser) {
       setIsLiked(_.includes(post.likes, authenticatedUser._id));
       setIsBookmarked(_.includes(authenticatedUser.bookmarks, post._id));
-      setLikesCount(post.likes?.length);
     }
+    setLikesCount(post.likes?.length);
   }, [authenticatedUser]);
 
   const handleLike = async () => {
@@ -164,22 +164,24 @@ const BlogPost = ({ post, setPosts, tagValue, ...props }) => {
     }
     try {
       if (isLiked) {
+        setIsLiked(false);
+        setLikesCount(likesCount - 1);
         const response = await unlikeAPost(post._id);
         if (response.success) {
           setUnlikedPostSuccess(true);
-          setIsLiked(false);
-          setLikesCount(likesCount - 1);
+          debug_mode && console.log("post unliked successfully");
           if (pathname === "/me/liked" && props.onPostUnLiked) {
             props.onPostUnLiked(post._id);
           }
         }
         debug_mode && console.log(response);
       } else {
+        setIsLiked(true);
+        setLikesCount(likesCount + 1);
         const response = await likeAPost(post._id);
         if (response.success) {
           setLikedPostSuccess(true);
-          setIsLiked(true);
-          setLikesCount(likesCount + 1);
+          debug_mode && console.log("post liked successfully");
         }
         debug_mode && console.log(response);
       }
@@ -195,20 +197,22 @@ const BlogPost = ({ post, setPosts, tagValue, ...props }) => {
     }
     try {
       if (isBookmarked) {
+        setIsBookmarked(false);
         const response = await unbookmarkAPost(post._id);
         if (response.success) {
+          debug_mode && console.log("unbookmarked successfully");
           setUnbookmarkedPostSuccess(true);
-          setIsBookmarked(false);
           if (pathname === "/me/bookmarks" && props.onPostUnBookmarked) {
             props.onPostUnBookmarked(post._id);
           }
         }
         debug_mode && console.log(response);
       } else {
+        setIsBookmarked(true);
         const response = await bookmarkAPost(post._id);
         if (response.success) {
+          debug_mode && console.log("bookmarked successfully");
           setBookmarkedPostSuccess(true);
-          setIsBookmarked(true);
         }
         debug_mode && console.log(response);
       }
@@ -237,17 +241,19 @@ const BlogPost = ({ post, setPosts, tagValue, ...props }) => {
           </Link>
           <Link to={`/${postsAuthor ? postsAuthor.username : ""}`}>
             <p className="mt-[2px] flex cursor-pointer flex-row items-center justify-center text-[14px] font-medium sm:text-[12px]">
-              {post.authorInfo.firstName + " " + post.authorInfo.lastName}
+              {postsAuthor
+                ? postsAuthor.firstName + " " + postsAuthor.lastName
+                : ""}
               <span className="ml-[7px]">
                 <div className="h-[2.5px] w-[2.5px] bg-[#757575]"></div>
               </span>
-              <span className="ml-[7px] text-[14px] font-medium text-[#757575]">
+              <span className="ml-[7px] text-[14px] font-medium text-[#757575] sm:text-[12px]">
                 {getTimeAgo(post.createdAt)}
               </span>
               <span className="ml-[7px]">
                 <div className="h-[2.5px] w-[2.3px] bg-[#757575]"></div>
               </span>
-              <span className="ml-[7px] text-[14px] font-medium text-[#757575]">{`${post.views} views`}</span>
+              <span className="ml-[7px] text-[14px] font-medium text-[#757575] sm:text-[12px]">{`${post.views} views`}</span>
             </p>
           </Link>
         </div>
@@ -260,7 +266,7 @@ const BlogPost = ({ post, setPosts, tagValue, ...props }) => {
             <div className="flex h-full flex-col space-y-3 rounded-lg">
               <div className="flex h-full flex-col space-y-2 rounded-lg">
                 <Link to={`/blog/${post._id}`}>
-                  <p className="cursor-pointer font-outfit text-[21px] font-bold line-clamp-2 sm:text-[16px]  sm:line-clamp-3">
+                  <p className="cursor-pointer font-outfit text-[21px] font-bold line-clamp-2 sm:text-[16px]">
                     {post.title}
                   </p>
                 </Link>

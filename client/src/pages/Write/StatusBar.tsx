@@ -20,6 +20,7 @@ const StatusBar = ({
   ...props
 }) => {
   const { pathname } = useLocation();
+
   const htmlToText = convert(description);
   const [isPublishPostModalOpen, setIsPublishPostModalOpen] = useState(false);
   return (
@@ -33,38 +34,46 @@ const StatusBar = ({
         setIsPublishing={setIsPublishing}
       />
       <div className={twMerge("flex justify-between", props.className)}>
-        <div className="flex space-x-2 text-[14px] italic text-[#878686] sm:text-[12px]">
-          <p className="flex items-center justify-center">Saved to Drafts</p>
-          <p className="flex items-center justify-center text-[18px] not-italic">
-            |
-          </p>
-          <p className="flex items-center justify-center">
-            {" "}
-            <div className="flex space-x-1">
-              {isConnected ? (
-                isSaving ? (
-                  <CloudSyncOutlinedIcon
-                    style={{ color: "#878686", fontSize: 18 }}
-                  />
+        {!(pathname.split("/")[1] === "write") && (
+          <div className="flex space-x-2 text-[14px] italic text-[#878686] sm:text-[12px]">
+            <p className="flex items-center justify-center">Saved to Drafts</p>
+            <p className="flex items-center justify-center text-[18px] not-italic">
+              |
+            </p>
+            <p className="flex items-center justify-center">
+              {" "}
+              <div className="flex space-x-1">
+                {isConnected ? (
+                  isSaving ? (
+                    <CloudSyncOutlinedIcon
+                      style={{ color: "#878686", fontSize: 18 }}
+                    />
+                  ) : (
+                    <CloudDoneOutlinedIcon
+                      style={{ color: "#878686", fontSize: 18 }}
+                    />
+                  )
                 ) : (
-                  <CloudDoneOutlinedIcon
-                    style={{ color: "#878686", fontSize: 18 }}
-                  />
-                )
-              ) : (
-                <CloudOffIcon style={{ color: "#878686", fontSize: 18 }} />
-              )}
-              <p className="">
-                {isConnected
-                  ? isSaving
-                    ? "Saving..."
-                    : "Saved"
-                  : "Trying to connect..."}
-              </p>
-            </div>
-          </p>
-        </div>
-        <div className="flex items-center justify-center">
+                  <CloudOffIcon style={{ color: "#878686", fontSize: 18 }} />
+                )}
+                <p className="">
+                  {isConnected
+                    ? isSaving
+                      ? "Saving..."
+                      : "Saved"
+                    : "Trying to connect..."}
+                </p>
+              </div>
+            </p>
+          </div>
+        )}
+        <div
+          className={`${
+            pathname.split("/")[1] === "write"
+              ? "right-0 ml-auto"
+              : "flex items-center justify-center"
+          }`}
+        >
           <Button
             variant="contained"
             color="success"

@@ -85,9 +85,10 @@ const Post = ({ post, user, setPosts }) => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!authenticatedUser) return;
-    setIsLiked(post.likes?.includes(authenticatedUser._id));
-    setIsBookmarked(user.bookmarks?.includes(post._id));
+    if (authenticatedUser) {
+      setIsLiked(post.likes?.includes(authenticatedUser._id));
+      setIsBookmarked(user.bookmarks?.includes(post._id));
+    }
     setLikesCount(post.likes?.length);
   }, [post, authenticatedUser]);
 
@@ -98,17 +99,19 @@ const Post = ({ post, user, setPosts }) => {
     }
     try {
       if (isLiked) {
+        setIsLiked(false);
+        setLikesCount(likesCount - 1);
         const response = await unlikeAPost(post._id);
         if (response.success) {
-          setIsLiked(false);
-          setLikesCount(likesCount - 1);
+          debug_mode && console.log("unliked successfully");
         }
         debug_mode && console.log(response);
       } else {
+        setIsLiked(true);
+        setLikesCount(likesCount + 1);
         const response = await likeAPost(post._id);
         if (response.success) {
-          setIsLiked(true);
-          setLikesCount(likesCount + 1);
+          debug_mode && console.log("liked successfully");
         }
         debug_mode && console.log(response);
       }
@@ -124,15 +127,17 @@ const Post = ({ post, user, setPosts }) => {
     }
     try {
       if (isBookmarked) {
+        setIsBookmarked(false);
         const response = await unbookmarkAPost(post._id);
         if (response.success) {
-          setIsBookmarked(false);
+          debug_mode && console.log("unbookmarked successfully");
         }
         debug_mode && console.log(response);
       } else {
+        setIsBookmarked(true);
         const response = await bookmarkAPost(post._id);
         if (response.success) {
-          setIsBookmarked(true);
+          debug_mode && console.log("bookmarked successfully");
         }
         debug_mode && console.log(response);
       }

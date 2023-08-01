@@ -54,6 +54,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Maadhyam</title>
     <style>
+      ::-webkit-scrollbar {
+        width: 11px;
+        background: transparent;
+      }
+      ::-webkit-scrollbar-thumb {
+        /* background: rgb(155, 155, 155);
+        
+        border: 2px solid rgb(255, 255, 255); */
+        box-shadow: inset 0 0 10px 10px rgb(119, 119, 119);
+        border: solid 2.3px transparent;
+        border-radius: 10px;
+      }
+      :hover::-webkit-scrollbar-thumb {
+        /* background: rgb(185, 185, 185); */
+        box-shadow: inset 0 0 10px 10px rgb(185, 185, 185);
+      }
       @media screen and (min-width: 1900px) {
         #root {
           width: 1900px;

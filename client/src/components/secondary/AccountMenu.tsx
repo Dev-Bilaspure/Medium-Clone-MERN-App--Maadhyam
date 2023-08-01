@@ -1,14 +1,11 @@
 import * as React from "react";
 import Box from "@mui/material/Box";
-import Avatar from "@mui/material/Avatar";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import Divider from "@mui/material/Divider";
 import IconButton from "@mui/material/IconButton";
-import Typography from "@mui/material/Typography";
 import Tooltip from "@mui/material/Tooltip";
-import PersonAdd from "@mui/icons-material/PersonAdd";
 import Settings from "@mui/icons-material/Settings";
 import Logout from "@mui/icons-material/Logout";
 import { useStore } from "@/store/useStore";
@@ -20,6 +17,7 @@ import CreateIcon from '@mui/icons-material/Create';
 import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
 import { useNavigate } from "react-router-dom";
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
+import GitHubIcon from '@mui/icons-material/GitHub';
 
 function AccountMenu() {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -184,6 +182,15 @@ function AccountMenu() {
               <PeopleAltIcon fontSize="small" />
             </ListItemIcon>
             My followings
+          </MenuItem>
+          <MenuItem onClick={() => {
+            handleClose();
+            window.open('https://github.com/Dev-Bilaspure/Medium-Clone-MERN-App--Maadhyam', '_blank');
+          }}>
+            <ListItemIcon>
+              <GitHubIcon fontSize="small" />
+            </ListItemIcon>
+            Github repo
           </MenuItem>
           <MenuItem onClick={() => {
             handleClose();

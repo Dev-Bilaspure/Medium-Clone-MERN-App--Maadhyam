@@ -77,12 +77,14 @@ const Suggestion = ({ user }) => {
       if (isFollowing) {
         const response = await unfollowAUser(user._id);
         if (response.success) {
+          debug_mode && console.log("unfollowed successfully");
           setIsFollowing(false);
         }
         debug_mode && console.log(response);
       } else {
         const response = await followAUser(user._id);
         if (response.success) {
+          debug_mode && console.log("followed successfully");
           setIsFollowing(true);
         }
         debug_mode && console.log(response);
@@ -97,7 +99,7 @@ const Suggestion = ({ user }) => {
       className={`flex w-[300px] flex-row space-x-3 sm:w-auto sm:justify-between sm:space-x-8 sm:space-x-0`}
     >
       <div className="flex space-x-3">
-        <div className="w-[45px] h-[45px] sm:w-[40px] sm:h-[40px]">
+        <div className="h-[45px] w-[45px] sm:h-[40px] sm:w-[40px]">
           <Link to={`/${user ? user.username : ""}`}>
             <img
               src={
@@ -109,7 +111,7 @@ const Suggestion = ({ user }) => {
             />
           </Link>
         </div>
-        <div className="flex-1 w-[150px] mb-[3px] sm:w-fit">
+        <div className="mb-[3px] w-[150px] flex-1 sm:w-fit">
           <Link to={`/${user ? user.username : ""}`}>
             <p className="font-lato text-[14px]">
               {user.firstName + " " + user.lastName}

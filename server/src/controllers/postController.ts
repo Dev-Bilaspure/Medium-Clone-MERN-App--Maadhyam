@@ -17,14 +17,33 @@ import IP from "../models/IP";
 
 export const getAllPosts = async (req: Request, res: Response) => {
   try {
-    const posts = await Post.find({ isPublished: true }).sort({
-      createdAt: -1,
-    });
+    const { pageno, pagesize } = req.query;
+
+    let parsedPageno = pageno !== undefined ? parseInt(pageno as string) : 1;
+    let parsedPagesize =
+      pagesize !== undefined ? parseInt(pagesize as string) : 10000;
+
+    if (parsedPageno < 1) parsedPageno = 1;
+    if (parsedPagesize < 1) parsedPagesize = 10000;
+
+    const posts = await Post.find({ isPublished: true })
+      .sort({
+        createdAt: -1,
+      })
+      .skip((parsedPageno - 1) * parsedPagesize)
+      .limit(parsedPagesize);
+
+    const totalPosts = await Post.countDocuments({ isPublished: true });
+
     if (posts.length === 0) {
-      res.status(200).json({ success: true, posts, message: "No posts found" });
+      res
+        .status(200)
+        .json({ success: true, posts, message: "No posts found", totalPosts });
       return;
     }
-    res.status(200).json({ success: true, posts, message: "All posts found" });
+    res
+      .status(200)
+      .json({ success: true, posts, message: "All posts found", totalPosts });
   } catch (error) {
     res.status(500).json({
       success: false,

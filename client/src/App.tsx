@@ -1,5 +1,6 @@
 import {
   BrowserRouter,
+  HashRouter,
   Navigate,
   Route,
   Routes,
@@ -29,6 +30,17 @@ const RoutesList = () => {
   const {
     data: { authenticatedUser },
   } = useStore();
+
+  
+  const location = useLocation();
+  
+  useEffect(() => {
+    window.scrollTo({
+      top: 0,
+      left: 0,
+    });
+  }, [location.pathname])
+
   return (
     <Routes>
       <Route path="/" element={<Home />} />
@@ -92,6 +104,7 @@ function App() {
     },
   } = useStore();
 
+
   const [isFetchingUser, setIsFetchingUser] = useState<boolean>(true);
   useEffect(() => {
     (async () => {
@@ -102,13 +115,15 @@ function App() {
     })();
   }, []);
 
+  
+
   return (
     <div className={!isFetchingUser ? "mt-[65px] sm:mt-[57px]" : ""}>
       <HelmetProvider>
-        <BrowserRouter>
+        <HashRouter>
           <Navbar />
           {isFetchingUser ? <SplashScreen /> : <RoutesList />}
-        </BrowserRouter>
+        </HashRouter>
       </HelmetProvider>
     </div>
   );

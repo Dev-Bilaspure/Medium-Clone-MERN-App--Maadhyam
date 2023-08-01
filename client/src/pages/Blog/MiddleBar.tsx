@@ -54,9 +54,10 @@ const MiddleBar = ({ textToRead, post, setPost, ...props }) => {
     }
     try {
       if (isLiked) {
+        setIsLiked(false);
         const response = await unlikeAPost(post._id);
         if (response.success) {
-          setIsLiked(false);
+          debug_mode && console.log("unliked successfully");
           setPost({
             ...post,
             likes: post.likes.filter((id) => id !== authenticatedUser._id),
@@ -65,9 +66,10 @@ const MiddleBar = ({ textToRead, post, setPost, ...props }) => {
         }
         debug_mode && console.log(response);
       } else {
+        setIsLiked(true);
         const response = await likeAPost(post._id);
         if (response.success) {
-          setIsLiked(true);
+          debug_mode && console.log("liked successfully");
           setPost({ ...post, likes: [...post.likes, authenticatedUser._id] });
           setLikePostSuccess(true);
         }
@@ -85,9 +87,10 @@ const MiddleBar = ({ textToRead, post, setPost, ...props }) => {
     }
     try {
       if (isBookmarked) {
+        setIsBookmarked(false);
         const response = await unbookmarkAPost(post._id);
         if (response.success) {
-          setIsBookmarked(false);
+          debug_mode && console.log("unbookmarked successfully");
           setAuthenticatedUser({
             ...authenticatedUser,
             bookmarks: authenticatedUser.bookmarks.filter(
@@ -98,9 +101,10 @@ const MiddleBar = ({ textToRead, post, setPost, ...props }) => {
         }
         debug_mode && console.log(response);
       } else {
+        setIsBookmarked(true);
         const response = await bookmarkAPost(post._id);
         if (response.success) {
-          setIsBookmarked(true);
+          debug_mode && console.log("bookmarked successfully");
           setAuthenticatedUser({
             ...authenticatedUser,
             bookmarks: [...authenticatedUser.bookmarks, post._id],
@@ -164,7 +168,9 @@ const MiddleBar = ({ textToRead, post, setPost, ...props }) => {
                 className="fa-regular fa-comment flex cursor-pointer flex-row items-center justify-center text-[20px] sm:text-[17px]"
                 onClick={() => toggleCommentBar(true)}
               ></i>
-              <p className="mt-1 font-sans text-[14px] sm:text-[13px]">{post.comments?.length || 0 }</p>
+              <p className="mt-1 font-sans text-[14px] sm:text-[13px]">
+                {post.comments?.length || 0}
+              </p>
             </div>
           </Tooltip>
         </div>

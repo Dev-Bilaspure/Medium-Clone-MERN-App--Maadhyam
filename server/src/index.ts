@@ -9,12 +9,20 @@ import { Server } from "socket.io";
 import http from "http";
 import { createPost, getPostById, updatePost } from "./utils/socketTaskMethods";
 import { configDotenv } from "dotenv";
+import tagRouter from "./routes/tagRoutes";
+import cookieParser from "cookie-parser";
 
 const PORT = process.env.PORT || 8000;
 const app: Express = express();
 const server = http.createServer(app);
 configDotenv();
-app.use(cors());
+app.use(cookieParser());
+const corsOptions ={
+  origin: ['http://localhost:3001', 'https://maadhyam-b50d.onrender.com'], 
+  credentials:true,            //access-control-allow-credentials:true
+  optionSuccessStatus:200
+}
+app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -22,16 +30,16 @@ connectMongoDB();
 
 const io = new Server(server, {
   cors: {
-    origin: '*',
-    methods: ['GET', 'POST']
-  }
-})
+    origin: "*",
+    methods: ["GET", "POST"],
+  },
+});
 
 io.on("connection", (socket) => {
   console.log("A client connected" + socket.id);
-  socket.on('test', (data) => {
+  socket.on("test", (data) => {
     console.log(data);
-  })
+  });
 
   socket.on("createPost", async (data) => {
     const response = await createPost(data);
@@ -53,7 +61,6 @@ io.on("connection", (socket) => {
   });
 });
 
-
 app.get("/", (req: Request, res: Response) => {
   const message = `
     <div style="text-align: center;">
@@ -68,8 +75,8 @@ app.use("/api/auth", authRouter);
 app.use("/api/users", userRouter);
 app.use("/api/posts", postRouter);
 app.use("/api/comments", commentRouter);
-
+app.use("/api/tags", tagRouter);
 
 server.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
-})
+});

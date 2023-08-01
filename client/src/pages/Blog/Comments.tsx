@@ -27,7 +27,7 @@ const Comments = ({
   } = useStore();
 
   useEffect(() => {
-    if (!authenticatedUser) return;
+    // if (!authenticatedUser) return;
     (async () => {
       const response = await getPostComments(post._id);
       if (response.success) {
@@ -157,6 +157,7 @@ const Comment = ({
           className="h-[40px] w-[40px] cursor-pointer rounded-full object-cover"
         />
         <div className="item-center flex cursor-pointer flex-col justify-center">
+          <div className="flex space-x-3">
           <p className="font-sans text-[14px]">
             {comment?.authorId === authenticatedUser?._id
               ? "You"
@@ -164,6 +165,10 @@ const Comment = ({
                 " " +
                 comment?.authorInfo.lastName}
           </p>
+          {comment.authorId === post.authorId && <div className="bg-[#2E7D32] flex justify-center px-2 rounded-xl h-[19px]">
+            <p className="text-[11px] mt-[3px] text-[#ffffff]  ">AUTHOR</p>
+          </div>}
+          </div>
           <p className="text-[12px]">{getTimeAgo(comment?.createdAt)}</p>
         </div>
       </div>
